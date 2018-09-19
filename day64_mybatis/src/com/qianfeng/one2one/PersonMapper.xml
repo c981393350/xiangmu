@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace 使用对应的Dao层的接口 -->
+<mapper namespace="com.qianfeng.one2one.IPersonDao">
+
+	<resultMap type="Person" id="personMap">
+		<id property="pid" column="pid"/>
+		<result property="pname" column="pname" />
+		<!-- assocation 体现一的关系
+			javaType 表示对象的类型
+			column t_person中的字段，将该字段对应的值传给select属性对应的查询使用
+			select 指定另外对象的查询操作， 命名空间+id 
+			fetchType 是否懒加载，默认lazy懒加载，eager 非懒加载
+		 -->
+		 <!-- 使用select属性，嵌套查询的语法 -->
+		<association property="card" 
+			javaType="com.qianfeng.one2one.Card"
+			column="cid" 
+			select="com.qianfeng.one2one.ICardDao.findById"
+			fetchType="eager"
+			>
+		</association>
+	</resultMap>
+	
+	
+	<resultMap type="Person" id="personMap2">
+		<id property="pid" column="pid"/>
+		<result property="pname" column="pname" />
+		<!-- 嵌套结果
+			手动写代码实现多表查询
+			resultMap 指定如何处理关联的数据， 命名空间+resultMap的id
+		 -->
+		<association property="card" resultMap="com.qianfeng.one2one.ICardDao.cardMap"></association>
+		
+	</resultMap>
+	
+	<!-- 必须使用resultMap -->
+	<select id="findById" parameterType="int" resultMap="personMap">
+		select * from t_person where pid=#{id}
+	</select>
+	
+	<select id="findById2" parameterType="int" resultMap="personMap2">
+		select * from t_person p
+		inner join t_card c
+		on p.cid=c.cid
+		where p.pid=#{pid}
+	</select>
+	
+</mapper>
+
+
+
+

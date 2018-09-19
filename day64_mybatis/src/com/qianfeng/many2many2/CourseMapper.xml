@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace 使用对应的Dao层的接口 -->
+<mapper namespace="com.qianfeng.many2many2.ICourseDao">
+
+	<resultMap type="Course" id="courseMap">
+		<id property="cid" column="cid"/>
+		<result property="cname" column="cname" />
+		
+	</resultMap>
+	
+	<select id="findById" parameterType="int" resultMap="courseMap">
+		select * from t_course c
+		where c.cid=#{cid}
+	</select>
+	
+	<select id="findBySid" parameterType="int" resultMap="courseMap">
+		select * from t_course c
+		inner join t_score s
+		on s.cid=c.cid
+		where s.sid=#{sid}
+	</select>
+	
+	
+	
+</mapper>
+
+
+
+

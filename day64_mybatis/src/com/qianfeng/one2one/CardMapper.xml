@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace 使用对应的Dao层的接口 -->
+<mapper namespace="com.qianfeng.one2one.ICardDao">
+
+	<resultMap type="Card" id="cardMap">
+		<id property="cid" column="cid"/>
+		<result property="cnum" column="cnum" />
+		
+	</resultMap>
+	
+	<select id="findById" parameterType="int" resultMap="cardMap">
+		select * from t_card where cid=#{cid}
+	</select>
+	
+</mapper>
+
+
+
+

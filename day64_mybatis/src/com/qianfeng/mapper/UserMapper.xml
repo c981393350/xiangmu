@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace 使用对应的Dao层的接口 -->
+<mapper namespace="com.qianfeng.mapper.IUserDao">
+
+	<resultMap type="User" id="userMap">
+		<id property="uid" column="uid"/>
+		<!-- 其他字段的映射关系 -->
+		<result property="uname" column="uname" />
+	</resultMap>
+	<!-- dao接口中的方法名和对应操作的id要相同
+		方法的参数和parameterType的指定的类型要一致
+	 -->
+	<insert id="add" parameterType="User">
+		insert into user(uname) values(#{uname})
+	</insert>
+	<!-- 方法的返回值类型和resultType指定的类型要保持一致 -->
+	<select id="findAll" resultType="User">
+		select * from user
+	</select>
+	
+</mapper>
+
+
+
+

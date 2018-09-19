@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace 使用对应的Dao层的接口 -->
+<mapper namespace="com.qianfeng.many2many2.IStudentDao">
+
+	<resultMap type="Student" id="stuMap">
+		<id property="sid" column="sid"/>
+		<result property="sname" column="sname" />
+		
+	</resultMap>
+	
+	
+	
+	<select id="findById" parameterType="int" resultMap="stuMap">
+		select * from t_stu where sid=#{sid}
+	</select>
+	
+	
+</mapper>
+
+
+
+

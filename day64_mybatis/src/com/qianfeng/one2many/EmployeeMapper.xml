@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace 使用对应的Dao层的接口 -->
+<mapper namespace="com.qianfeng.one2many.IEmployeeDao">
+
+	<resultMap type="Employee" id="empMap">
+		<id property="eid" column="eid"/>
+		<result property="ename" column="ename" />
+		<!-- 一的关系 
+			javaType 属性的类型
+		-->
+		<!-- 嵌套查询 -->
+		<association property="dept" 
+			javaType="com.qianfeng.one2many.Department"
+			column="deptId"
+			select="com.qianfeng.one2many.IDepartmentDao.findById">
+		</association>
+	</resultMap>
+	
+	<resultMap type="Employee" id="empMap2">
+		<id property="eid" column="eid"/>
+		<result property="ename" column="ename" />
+		
+	</resultMap>
+	
+	<resultMap type="Employee" id="empMap3">
+		<id property="eid" column="eid"/>
+		<result property="ename" column="ename" />
+		<!-- 一的关系 
+			javaType 属性的类型
+		-->
+		<!-- 嵌套结果 -->
+		<association property="dept" 
+			javaType="com.qianfeng.one2many.Department"
+			resultMap="com.qianfeng.one2many.IDepartmentDao.deptMap2">
+		</association>
+	</resultMap>
+	
+	<select id="findByDeptId" parameterType="int" resultMap="empMap2">
+		select * from t_emp where deptId=#{did}
+	</select>
+	
+	<insert id="add" parameterType="Employee">
+		insert into t_emp(ename,deptId) values(#{ename}, #{dept.did})
+	</insert>
+	
+	
+</mapper>
+
+
+
+

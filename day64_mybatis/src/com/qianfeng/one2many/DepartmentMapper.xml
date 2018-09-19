@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace 使用对应的Dao层的接口 -->
+<mapper namespace="com.qianfeng.one2many.IDepartmentDao">
+
+	<resultMap type="Department" id="deptMap">
+		<id property="did" column="did"/>
+		<result property="dname" column="dname" />
+		<!-- collection 表示多的关系 
+			javaType 属性的类型
+			ofType 列表中元素的类型
+			column 本映射文件是针对部门的映射，对应的列从t_dept里来找， 对应的列的值，要传给select对应的查询使用
+		-->
+		<!-- 嵌套查询 -->
+		<collection property="emps" 
+			javaType="java.util.ArrayList"
+			ofType="com.qianfeng.one2many.Employee"
+			column="did"
+			select="com.qianfeng.one2many.IEmployeeDao.findByDeptId">
+		</collection>
+	</resultMap>
+	
+	<resultMap type="Department" id="deptMap2">
+		<id property="did" column="did"/>
+		<result property="dname" column="dname" />
+		<!-- collection 表示多的关系 
+			javaType 属性的类型
+			ofType 列表中元素的类型
+			column 本映射文件是针对部门的映射，对应的列从t_dept里来找， 对应的列的值，要传给select对应的查询使用
+		-->
+		<!-- 嵌套结果 -->
+		<collection property="emps" 
+			javaType="java.util.ArrayList"
+			ofType="com.qianfeng.one2many.Employee"
+			resultMap="com.qianfeng.one2many.IEmployeeDao.empMap2">
+		</collection>
+	</resultMap>
+	
+	<select id="findById" parameterType="int" resultMap="deptMap">
+		select * from t_dept where did=#{did}
+	</select>
+	
+	<select id="findById2" parameterType="int" resultMap="deptMap2">
+		select * from t_dept d
+		inner join t_emp e
+		on d.did=e.deptId
+		where d.did=#{did}
+	</select>
+	
+	<!-- 获取自增的id 
+		useGeneratedKeys="true" 针对mysql
+		keyProperty 将自增的数据赋值给哪个属性
+		
+		会将自增的id赋值给传来的部门对象中的did属性
+	-->
+	<insert id="add" parameterType="Department" useGeneratedKeys="true" keyProperty="did">
+	
+		insert into t_dept(dname) values(#{dname})
+	</insert>
+	
+	<insert id="add1" parameterType="Department">
+	<!-- 插入数据后order="AFTER"，通过last_insert_id() 获取自增的值，赋值给did属性 -->
+		<selectKey keyProperty="did" order="AFTER" resultType="int">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into t_dept(dname) values(#{dname})
+	</insert>
+	
+</mapper>
+
+
+
+

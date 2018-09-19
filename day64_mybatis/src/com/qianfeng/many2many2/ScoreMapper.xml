@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace 使用对应的Dao层的接口 -->
+<mapper namespace="com.qianfeng.many2many2.IScoreDao">
+
+	<resultMap type="Score" id="scoreMap">
+		<id property="id" column="id"/>
+		<result property="score" column="score" />
+		<association property="stu" javaType="Student" column="sid"
+			select="com.qianfeng.many2many2.IStudentDao.findById">
+		</association>
+		<association property="course" javaType="Course" column="cid"
+			select="com.qianfeng.many2many2.ICourseDao.findById">
+		</association>
+	</resultMap>
+	<!-- 嵌套结果 -->
+	<resultMap type="Score" id="scoreMap2">
+		<id property="id" column="id"/>
+		<result property="score" column="score" />
+		<association property="stu" javaType="Student"
+			resultMap="com.qianfeng.many2many2.IStudentDao.stuMap">
+		</association>
+		<association property="course" javaType="Course"
+			resultMap="com.qianfeng.many2many2.ICourseDao.courseMap">
+		</association>
+	</resultMap>
+	
+	<select id="findAll" resultMap="scoreMap2">
+		select stu.*,course.*,score.id,score.score from t_stu stu
+		inner join t_score score
+		on stu.sid=score.sid
+		inner join t_course course
+		on course.cid=score.cid
+		
+	</select>
+	
+	<select id="findById" parameterType="int" resultMap="stuMap">
+		select * from t_stu where sid=#{sid}
+	</select>
+	
+	
+</mapper>
+
+
+
+
